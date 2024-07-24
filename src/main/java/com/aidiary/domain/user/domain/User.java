@@ -19,7 +19,7 @@ public class User {
 
     private String nickname;
 
-    private String name;
+    private String username;
 
     private String email;
 
@@ -27,9 +27,9 @@ public class User {
 
 
     @Builder
-    public User(String nickname, String name, String email, String role) {
+    public User(String nickname, String username, String email, String role) {
         this.nickname = nickname;
-        this.name = name;
+        this.username = username;
         this.email = email;
         this.role = role;
     }

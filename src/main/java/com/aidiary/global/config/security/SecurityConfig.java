@@ -32,6 +32,9 @@ public class SecurityConfig {
         http
                 .httpBasic((auth) -> auth.disable());
 
+        //JWTFilter 등록
+
+
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
