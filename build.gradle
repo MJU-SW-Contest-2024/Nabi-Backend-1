@@ -46,6 +46,10 @@ dependencies {
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.12.3'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.12.3'
 
+    //jwk
+    implementation 'com.auth0:java-jwt:3.18.2'
+    implementation 'com.auth0:jwks-rsa:0.20.0'
+
     //s3 bucket
     implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.1000')
     implementation 'com.amazonaws:aws-java-sdk-s3'
