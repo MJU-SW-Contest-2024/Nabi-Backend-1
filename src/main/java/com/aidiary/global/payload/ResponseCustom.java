@@ -138,4 +138,12 @@ public class ResponseCustom<T> {
                 .statusCode(441)
                 .build();
     }
+
+    public static <T> ResponseCustom<T> INVALID_ID_TOKEN(){
+        return (ResponseCustom<T>) ResponseCustom.builder()
+                .transaction_time(LocalDateTime.now())
+                .description("INVALID_ID_TOKEN")
+                .statusCode(401)
+                .build();
+    }
 }
