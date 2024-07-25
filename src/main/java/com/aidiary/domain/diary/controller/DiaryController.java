@@ -58,9 +58,9 @@ public class DiaryController {
         return diaryService.getDiariesByUserId(userId);
     }
 
-    @PostMapping("/autosave")
-    public Diary autoSaveDiary(@RequestBody UpdateDiaryRequestDto dto) {
-        return diaryService.autoSaveDiary(dto.toServiceRequest(dto));
-    }
+//    @PostMapping("/autosave")
+//    public Diary autoSaveDiary(@RequestBody UpdateDiaryRequestDto dto) {
+//        return diaryService.autoSaveDiary(dto.toServiceRequest(dto));
+//    }
 }
 
