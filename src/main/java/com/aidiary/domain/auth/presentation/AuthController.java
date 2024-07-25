@@ -30,6 +30,7 @@ public class AuthController {
     private final OidcProviderFactory oidcProviderFactory;
     private final JWTUtil jwtUtil;
 
+
     private final AuthService authService;
 
 
@@ -68,23 +69,6 @@ public class AuthController {
         System.out.println("idTokenReq = " + idTokenReq.provider());
 
         String accessToken = jwtUtil.createJwt("access", "test_user", "ROLE_USER", 3600000L, "test@naver.com");
-
-        AuthRes authRes = AuthRes.builder()
-                .accessToken(accessToken)
-                .build();
-
-        return ResponseCustom.OK(authRes);
-    }
-
-
-
-    @PostMapping("/test/login")
-    public ResponseCustom<AuthRes> testlogin(@RequestBody IdTokenReq idTokenReq) {
-
-        System.out.println("idTokenReq = " + idTokenReq.idToken());
-        System.out.println("idTokenReq = " + idTokenReq.provider());
-
-        String accessToken = jwtUtil.createJwt("access", "test_user", "ROLE_USER", 3600000L);
 
         AuthRes authRes = AuthRes.builder()
                 .accessToken(accessToken)
