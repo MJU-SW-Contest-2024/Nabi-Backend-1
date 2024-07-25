@@ -15,9 +15,11 @@ public interface OidcProvider {
         String header = token.split("\\.")[0];
 
         try {
-            return new ObjectMapper().readValue(decodeBase64(header), Map.class);
+            String decodedHeader = new String(decodeBase64(header), "UTF-8");
+            System.out.println("Decoded Header: " + decodedHeader); // 디버깅 용 출력
+            return new ObjectMapper().readValue(decodedHeader, Map.class);
         } catch (IOException e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 }
