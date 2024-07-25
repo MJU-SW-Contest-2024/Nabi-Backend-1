@@ -1,4 +1,4 @@
-package com.aidiary.domain.auth.service;
+package com.aidiary.domain.auth.application;
 
 import com.aidiary.domain.user.domain.User;
 import com.aidiary.domain.user.domain.repository.UserRepository;
@@ -27,5 +27,6 @@ public class AuthService {
             return userRepository.save(newUser);
         }
     }
+
 
 }

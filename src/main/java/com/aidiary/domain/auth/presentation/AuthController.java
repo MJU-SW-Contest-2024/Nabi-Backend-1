@@ -2,7 +2,7 @@ package com.aidiary.domain.auth.presentation;
 
 import com.aidiary.domain.auth.dto.AuthRes;
 import com.aidiary.domain.auth.dto.IdTokenReq;
-import com.aidiary.domain.auth.service.AuthService;
+import com.aidiary.domain.auth.application.AuthService;
 import com.aidiary.global.config.security.jwt.JWTUtil;
 import com.aidiary.global.config.security.oidc.OidcProviderFactory;
 import com.aidiary.global.config.security.oidc.Provider;
@@ -50,6 +50,23 @@ public class AuthController {
         authService.findOrCreateUser(idTokenReq.provider(), providerId);
 
         String accessToken = jwtUtil.createJwt("access", providerId, "ROLE_USER", 3600000L);
+
+        AuthRes authRes = AuthRes.builder()
+                .accessToken(accessToken)
+                .build();
+
+        return ResponseCustom.OK(authRes);
+    }
+
+
+
+    @PostMapping("/test/login")
+    public ResponseCustom<AuthRes> testlogin(@RequestBody IdTokenReq idTokenReq) {
+
+        System.out.println("idTokenReq = " + idTokenReq.idToken());
+        System.out.println("idTokenReq = " + idTokenReq.provider());
+
+        String accessToken = jwtUtil.createJwt("access", "test_user", "ROLE_USER", 3600000L);
 
         AuthRes authRes = AuthRes.builder()
                 .accessToken(accessToken)
