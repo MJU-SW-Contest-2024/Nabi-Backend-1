@@ -9,6 +9,7 @@ import com.aidiary.domain.diary.dto.EditDiaryRes;
 import com.aidiary.domain.user.domain.User;
 import com.aidiary.domain.user.domain.repository.UserRepository;
 import com.aidiary.global.config.security.token.UserPrincipal;
+import com.aidiary.global.payload.Message;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -66,5 +67,26 @@ public class DiaryService {
         }
 
         return null;
+    }
+
+    @Transactional
+    public Message removeDiary(UserPrincipal userPrincipal, Long id) {
+        Diary diary = diaryRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
+
+        User user = userRepository.findById(userPrincipal.getId())
+                .orElseThrow(EntityNotFoundException::new);
+
+        if (diary.getUser().equals(user)) {
+            diaryRepository.delete(diary);
+
+            return Message.builder()
+                    .message("일기를 삭제하였습니다.")
+                    .build();
+        }
+
+        return Message.builder()
+                .message("일기 삭제에 실패했습니다.")
+                .build();
     }
 }
