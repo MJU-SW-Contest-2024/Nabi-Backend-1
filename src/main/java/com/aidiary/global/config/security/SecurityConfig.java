@@ -1,5 +1,6 @@
 package com.aidiary.global.config.security;
 
+import com.aidiary.domain.auth.application.CustomUserDetailsService;
 import com.aidiary.global.config.security.jwt.JWTFilter;
 import com.aidiary.global.config.security.jwt.JWTUtil;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import static org.springframework.security.config.Customizer.*;
 public class SecurityConfig {
 
     private final JWTUtil jwtUtil;
+    private final CustomUserDetailsService userDetailsService;
 
 
     @Bean
@@ -39,7 +41,7 @@ public class SecurityConfig {
 
         //JWTFilter 등록
         http
-                .addFilterBefore(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
+                .addFilterBefore(new JWTFilter(jwtUtil, userDetailsService), OAuth2LoginAuthenticationFilter.class);
 
 
         // 경로별 인가 작업
