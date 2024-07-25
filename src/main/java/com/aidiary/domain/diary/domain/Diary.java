@@ -30,6 +30,10 @@ public class Diary extends BaseEntity {
     @Column(name = "diary_entry_date")
     private LocalDate diaryEntryDate;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "emotion")
+    private Emotion emotion;
+
 
     @Builder
     public Diary(User user, String content, LocalDate diaryEntryDate) {
@@ -44,5 +48,9 @@ public class Diary extends BaseEntity {
 
     public void updateDiaryEntryDate(LocalDate diaryEntryDate) {
         this.diaryEntryDate = diaryEntryDate;
+    }
+
+    public void updateEmotion(Emotion emotion) {
+        this.emotion = emotion;
     }
 }

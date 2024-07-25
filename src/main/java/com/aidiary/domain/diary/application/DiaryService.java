@@ -4,6 +4,8 @@ import com.aidiary.domain.diary.domain.Diary;
 import com.aidiary.domain.diary.domain.repository.DiaryRepository;
 import com.aidiary.domain.diary.dto.CreateDiaryReq;
 import com.aidiary.domain.diary.dto.CreateDiaryRes;
+import com.aidiary.domain.diary.dto.EditDiaryReq;
+import com.aidiary.domain.diary.dto.EditDiaryRes;
 import com.aidiary.domain.user.domain.User;
 import com.aidiary.domain.user.domain.repository.UserRepository;
 import com.aidiary.global.config.security.token.UserPrincipal;
@@ -40,5 +42,29 @@ public class DiaryService {
                 .build();
 
         return createDiaryRes;
+    }
+
+    @Transactional
+    public EditDiaryRes editDiary(UserPrincipal userPrincipal, EditDiaryReq editDiaryReq, Long id) {
+        User user = userRepository.findById(userPrincipal.getId())
+                .orElseThrow(EntityNotFoundException::new);
+
+        Diary diary = diaryRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
+
+        if (user.getId().equals(diary.getUser().getId())) {
+            diary.updateContent(editDiaryReq.content());
+
+            EditDiaryRes editDiaryRes = EditDiaryRes.builder()
+                    .userId(user.getId())
+                    .DiaryId(diary.getId())
+                    .content(editDiaryReq.content())
+                    .diaryEntryDate(diary.getDiaryEntryDate())
+                    .build();
+
+            return editDiaryRes;
+        }
+
+        return null;
     }
 }
