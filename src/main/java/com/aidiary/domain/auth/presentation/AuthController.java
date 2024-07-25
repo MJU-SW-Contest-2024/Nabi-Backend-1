@@ -41,6 +41,7 @@ public class AuthController {
     })
     @PostMapping("/login")
     public ResponseCustom<AuthRes> login(@RequestBody IdTokenReq idTokenReq) {
+        System.out.println("idTokenReq = " + idTokenReq.idToken());
         String providerId = oidcProviderFactory.getProviderId(
                 Provider.valueOf(idTokenReq.provider().toUpperCase()), idTokenReq.idToken());
 
@@ -48,7 +49,7 @@ public class AuthController {
             return ResponseCustom.INVALID_ID_TOKEN();
         }
 
-        authService.findOrCreateUser(idTokenReq.provider(), providerId);
+        authService.findOrCreateUser(idTokenReq.provider(), idTokenReq.idToken());
         String email = authService.findEmail(providerId);
 
         String accessToken = jwtUtil.createJwt("access", providerId, "ROLE_USER", 3600000L, email);

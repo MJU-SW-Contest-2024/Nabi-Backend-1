@@ -31,11 +31,18 @@ public class KakaoOidcProvider implements OidcProvider{
     @Override
     public String getProviderId(String idToken) {
         try {
+            Map<String, String> headers = parseHeaders(idToken);
+            System.out.println("Parsed Headers: " + headers); // 디버깅 용 출력
+
             DecodedJWT jwt = JWT.decode(idToken);
             Jwk jwk = jwkProvider.get(jwt.getKeyId());
             Algorithm algorithm = Algorithm.RSA256((RSAPublicKey) jwk.getPublicKey(), null);
             algorithm.verify(jwt);
-            return jwt.getClaim("id").asString();
+
+            String providerId = jwt.getClaim("sub").asString();
+            System.out.println("Provider ID: " + providerId); // Debugging output
+
+            return providerId;
         } catch (Exception e) {
             throw new RuntimeException("Invalid ID token", e);
         }
