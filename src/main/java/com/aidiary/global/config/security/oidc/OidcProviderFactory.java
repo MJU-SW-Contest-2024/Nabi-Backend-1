@@ -35,6 +35,7 @@ public class OidcProviderFactory {
         return getProvider(provider).getProviderId(idToken);
     }
 
+
     private OidcProvider getProvider(Provider provider) {
         OidcProvider oidcProvider = authProviderMap.get(provider);
         if (oidcProvider == null) {

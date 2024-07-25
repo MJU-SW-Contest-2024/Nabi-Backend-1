@@ -48,8 +48,26 @@ public class AuthController {
         }
 
         authService.findOrCreateUser(idTokenReq.provider(), providerId);
+        String email = authService.findEmail(providerId);
 
-        String accessToken = jwtUtil.createJwt("access", providerId, "ROLE_USER", 3600000L);
+        String accessToken = jwtUtil.createJwt("access", providerId, "ROLE_USER", 3600000L, email);
+
+        AuthRes authRes = AuthRes.builder()
+                .accessToken(accessToken)
+                .build();
+
+        return ResponseCustom.OK(authRes);
+    }
+
+
+
+    @PostMapping("/test/login")
+    public ResponseCustom<AuthRes> testlogin(@RequestBody IdTokenReq idTokenReq) {
+
+        System.out.println("idTokenReq = " + idTokenReq.idToken());
+        System.out.println("idTokenReq = " + idTokenReq.provider());
+
+        String accessToken = jwtUtil.createJwt("access", "test_user", "ROLE_USER", 3600000L, "test@naver.com");
 
         AuthRes authRes = AuthRes.builder()
                 .accessToken(accessToken)

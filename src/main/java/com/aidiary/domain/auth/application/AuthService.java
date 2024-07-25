@@ -2,6 +2,7 @@ package com.aidiary.domain.auth.application;
 
 import com.aidiary.domain.user.domain.User;
 import com.aidiary.domain.user.domain.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,4 +30,9 @@ public class AuthService {
     }
 
 
+    public String findEmail(String providerId) {
+        User user = userRepository.findByProviderId(providerId)
+                .orElseThrow(EntityNotFoundException::new);
+        return user.getEmail();
+    }
 }
