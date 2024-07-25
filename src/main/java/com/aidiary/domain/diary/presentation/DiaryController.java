@@ -8,6 +8,7 @@ import com.aidiary.domain.diary.dto.EditDiaryRes;
 import com.aidiary.global.config.security.token.CurrentUser;
 import com.aidiary.global.config.security.token.UserPrincipal;
 import com.aidiary.global.payload.ErrorResponse;
+import com.aidiary.global.payload.Message;
 import com.aidiary.global.payload.ResponseCustom;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -55,4 +56,16 @@ public class DiaryController {
         return ResponseCustom.OK(diaryService.editDiary(userPrincipal, editDiaryReq, id));
     }
 
+    @Operation(summary = "일기 삭제", description = "선택된 일기를 삭제한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "일기 삭제 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Message.class))}),
+            @ApiResponse(responseCode = "400", description = "일기 삭제 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @DeleteMapping("/{id}")
+    public ResponseCustom<Message> deleteDiary(
+            @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+            @Parameter(description = "삭제할 일기의 id를 입력해주세요.", required = true) @PathVariable Long id
+    ) {
+        return ResponseCustom.OK(diaryService.removeDiary(userPrincipal, id));
+    }
 }
