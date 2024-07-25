@@ -48,8 +48,9 @@ public class AuthController {
         }
 
         authService.findOrCreateUser(idTokenReq.provider(), providerId);
+        String email = authService.findEmail(providerId);
 
-        String accessToken = jwtUtil.createJwt("access", providerId, "ROLE_USER", 3600000L);
+        String accessToken = jwtUtil.createJwt("access", providerId, "ROLE_USER", 3600000L, email);
 
         AuthRes authRes = AuthRes.builder()
                 .accessToken(accessToken)
@@ -66,7 +67,7 @@ public class AuthController {
         System.out.println("idTokenReq = " + idTokenReq.idToken());
         System.out.println("idTokenReq = " + idTokenReq.provider());
 
-        String accessToken = jwtUtil.createJwt("access", "test_user", "ROLE_USER", 3600000L);
+        String accessToken = jwtUtil.createJwt("access", "test_user", "ROLE_USER", 3600000L, "test@naver.com");
 
         AuthRes authRes = AuthRes.builder()
                 .accessToken(accessToken)
