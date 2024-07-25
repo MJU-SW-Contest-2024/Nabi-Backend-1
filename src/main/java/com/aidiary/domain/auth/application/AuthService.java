@@ -1,7 +1,9 @@
 package com.aidiary.domain.auth.application;
 
+import com.aidiary.domain.auth.dto.NicknameRes;
 import com.aidiary.domain.user.domain.User;
 import com.aidiary.domain.user.domain.repository.UserRepository;
+import com.aidiary.global.config.security.token.UserPrincipal;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.persistence.EntityNotFoundException;
@@ -41,5 +43,21 @@ public class AuthService {
         User user = userRepository.findByProviderId(providerId)
                 .orElseThrow(EntityNotFoundException::new);
         return user.getEmail();
+    }
+
+
+    @Transactional
+    public NicknameRes updateNickname(UserPrincipal userPrincipal, String nickname) {
+        User user = userRepository.findById(userPrincipal.getId())
+                .orElseThrow(EntityNotFoundException::new);
+
+        user.updateNickname(nickname);
+
+        NicknameRes nicknameRes = NicknameRes.builder()
+                .userid(user.getId())
+                .nickname(nickname)
+                .build();
+
+        return nicknameRes;
     }
 }
