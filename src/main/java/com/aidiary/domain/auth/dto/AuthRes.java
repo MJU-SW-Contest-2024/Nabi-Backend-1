@@ -21,7 +21,7 @@ public record AuthRes(
             tokenType = "Bearer";
         }
         if (role == null) {
-            tokenType = "ROLE_USER";
+            role = "ROLE_USER";
         }
     }
 }
