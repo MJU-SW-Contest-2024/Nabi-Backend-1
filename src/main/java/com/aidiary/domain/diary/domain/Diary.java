@@ -33,7 +33,7 @@ public class Diary extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "emotion")
-    private Emotion emotion;
+    private String emotion;
 
 
     @Builder
@@ -51,7 +51,7 @@ public class Diary extends BaseEntity {
         this.diaryEntryDate = diaryEntryDate;
     }
 
-    public void updateEmotion(Emotion emotion) {
+    public void updateEmotion(String emotion) {
         this.emotion = emotion;
     }
 }

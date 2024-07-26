@@ -7,6 +7,7 @@ import com.aidiary.domain.emotion.dto.ChatGPTRes;
 import com.aidiary.global.config.security.token.CurrentUser;
 import com.aidiary.global.config.security.token.UserPrincipal;
 import com.aidiary.global.payload.ErrorResponse;
+import com.aidiary.global.payload.Message;
 import com.aidiary.global.payload.ResponseCustom;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -53,5 +54,19 @@ public class EmotionController {
         ChatGPTReq request = new ChatGPTReq(model, concatedPrompt);
         ChatGPTRes chatGPTRes = restTemplate.postForObject(apiURL, request, ChatGPTRes.class);
         return ResponseCustom.OK(chatGPTRes.getChoices().get(0).getMessage().getContent());
+    }
+
+    @Operation(summary = "일기 감정 저장", description = "일기에 대한 전반적인 감정을 저장합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "일기 감정 저장 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Message.class))}),
+            @ApiResponse(responseCode = "400", description = "일기 감정 저장 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @PostMapping("/{diaryId}/{emotionState}")
+    public ResponseCustom<Message> saveEmotion(
+            @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+            @Parameter(description = "판정할 일기의 id를 입력해주세요.", required = true) @PathVariable Long diaryId,
+            @Parameter(description = "저장할 감정을 입력해주세요.", required = true) @PathVariable String emotionState
+    ) {
+        return ResponseCustom.OK(emotionService.saveEmotion(userPrincipal, diaryId, emotionState));
     }
 }
