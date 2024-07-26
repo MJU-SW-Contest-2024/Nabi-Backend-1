@@ -12,7 +12,10 @@ public record AuthRes(
         String tokenType,
 
         @Schema( type = "Role", example = "USER", description = "Role을 출력합니다.")
-        String role
+        String role,
+
+        @Schema( type = "boolean", example = "false", description = "회원가입 완료 여부를 출력합니다.")
+        boolean isRegistered
 ) {
 
     @Builder

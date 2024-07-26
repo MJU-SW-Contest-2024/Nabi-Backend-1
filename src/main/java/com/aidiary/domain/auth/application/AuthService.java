@@ -39,6 +39,7 @@ public class AuthService {
     }
 
 
+    @Transactional
     public String findEmail(String providerId) {
         User user = userRepository.findByProviderId(providerId)
                 .orElseThrow(EntityNotFoundException::new);
@@ -53,10 +54,14 @@ public class AuthService {
 
         user.updateNickname(nickname);
 
+        user.updateIsRegistered();
+
         NicknameRes nicknameRes = NicknameRes.builder()
                 .userid(user.getId())
                 .nickname(nickname)
+                .isRegistered(user.isRegistered())
                 .build();
+
 
         return nicknameRes;
     }
