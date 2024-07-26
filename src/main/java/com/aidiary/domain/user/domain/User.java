@@ -28,6 +28,8 @@ public class User extends BaseEntity {
 
     private String providerId;
 
+    private boolean isRegistered;
+
 
     @Builder
     public User(String nickname, String username, String email, String role, String provider, String providerId) {
@@ -37,9 +39,14 @@ public class User extends BaseEntity {
         this.role = role;
         this.provider = provider;
         this.providerId = providerId;
+        this.isRegistered = false;
     }
 
     public void updateNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public void updateIsRegistered() {
+        this.isRegistered = true;
     }
 }
