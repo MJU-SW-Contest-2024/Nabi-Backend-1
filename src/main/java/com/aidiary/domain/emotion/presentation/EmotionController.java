@@ -4,6 +4,7 @@ import com.aidiary.domain.diary.domain.repository.DiaryRepository;
 import com.aidiary.domain.emotion.application.EmotionService;
 import com.aidiary.domain.emotion.dto.ChatGPTReq;
 import com.aidiary.domain.emotion.dto.ChatGPTRes;
+import com.aidiary.domain.emotion.dto.EmotionStatRes;
 import com.aidiary.global.config.security.token.CurrentUser;
 import com.aidiary.global.config.security.token.UserPrincipal;
 import com.aidiary.global.payload.ErrorResponse;
@@ -18,8 +19,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cglib.core.Local;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
+import java.time.LocalDate;
 
 @Tag(name = "Emotion", description = "Emotion API")
 @RestController
@@ -68,5 +72,19 @@ public class EmotionController {
             @Parameter(description = "저장할 감정을 입력해주세요.", required = true) @PathVariable String emotionState
     ) {
         return ResponseCustom.OK(emotionService.saveEmotion(userPrincipal, diaryId, emotionState));
+    }
+
+    @Operation(summary = "일기 감정 통계 조회", description = "설정한 기간에 대한 감정 통계를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "감정 통계 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = EmotionStatRes.class))}),
+            @ApiResponse(responseCode = "400", description = "감정 통계 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @GetMapping("/{startDate}/{endDate}")
+    public ResponseCustom<EmotionStatRes> getEmotionStat(
+            @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+            @PathVariable LocalDate startDate,
+            @PathVariable LocalDate endDate
+            ) {
+        return ResponseCustom.OK(emotionService.loadEmotionStat(userPrincipal, startDate, endDate));
     }
 }
