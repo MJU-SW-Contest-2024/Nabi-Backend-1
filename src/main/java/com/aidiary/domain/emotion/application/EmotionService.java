@@ -35,6 +35,7 @@ public class EmotionService {
 
     }
 
+    @Transactional
     public Message saveEmotion(UserPrincipal userPrincipal, Long diaryId, String emotionState) {
         User user = userRepository.findById(userPrincipal.getId())
                 .orElseThrow(EntityNotFoundException::new);
