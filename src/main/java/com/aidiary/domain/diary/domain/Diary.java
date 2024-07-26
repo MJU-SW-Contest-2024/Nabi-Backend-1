@@ -24,7 +24,8 @@ public class Diary extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "content")
+    @Lob
+    @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
     @Column(name = "diary_entry_date")
