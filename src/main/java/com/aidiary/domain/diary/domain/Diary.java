@@ -31,7 +31,6 @@ public class Diary extends BaseEntity {
     @Column(name = "diary_entry_date")
     private LocalDate diaryEntryDate;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "emotion")
     private String emotion;
 
