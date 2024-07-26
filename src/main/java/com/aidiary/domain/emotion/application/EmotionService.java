@@ -2,6 +2,7 @@ package com.aidiary.domain.emotion.application;
 
 import com.aidiary.domain.diary.domain.Diary;
 import com.aidiary.domain.diary.domain.repository.DiaryRepository;
+import com.aidiary.domain.emotion.dto.EmotionStatRes;
 import com.aidiary.domain.user.domain.User;
 import com.aidiary.domain.user.domain.repository.UserRepository;
 import com.aidiary.global.config.security.token.UserPrincipal;
@@ -10,6 +11,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -55,5 +58,12 @@ public class EmotionService {
         return Message.builder()
                 .message("감정 저장에 실패했습니다.")
                 .build();
+    }
+
+    public EmotionStatRes loadEmotionStat(UserPrincipal userPrincipal, LocalDate startDate, LocalDate endDate) {
+
+        EmotionStatRes emotionsCountBetweenStartDateAndEndDate = diaryRepository.findEmotionsCountBetweenStartDateAndEndDate(userPrincipal.getId(), startDate, endDate);
+
+        return emotionsCountBetweenStartDateAndEndDate;
     }
 }
