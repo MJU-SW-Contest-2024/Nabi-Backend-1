@@ -5,6 +5,7 @@ import lombok.Builder;
 @Builder
 public record NicknameRes(
         String nickname,
-        Long userid
+        Long userid,
+        boolean isRegistered
 ) {
 }
