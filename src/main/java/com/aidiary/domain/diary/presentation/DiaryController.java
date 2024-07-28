@@ -2,6 +2,7 @@ package com.aidiary.domain.diary.presentation;
 
 import com.aidiary.domain.diary.application.DiaryService;
 import com.aidiary.domain.diary.dto.*;
+import com.aidiary.domain.diary.dto.condition.DiariesSearchCondition;
 import com.aidiary.global.config.security.token.CurrentUser;
 import com.aidiary.global.config.security.token.UserPrincipal;
 import com.aidiary.global.payload.ErrorResponse;
@@ -16,6 +17,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.AccessDeniedException;
@@ -79,5 +82,19 @@ public class DiaryController {
             @Parameter(description = "삭제할 일기의 id를 입력해주세요.", required = true) @PathVariable Long id
     ) {
         return ResponseCustom.OK(diaryService.removeDiary(userPrincipal, id));
+    }
+
+    @Operation(summary = "일기 검색(내용) 조회", description = "일기를 검색 조건에 따라 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "일기 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SearchDiariesRes.class))}),
+            @ApiResponse(responseCode = "400", description = "일기 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @GetMapping("/contentSearch")
+    public ResponseCustom<Page<SearchDiariesRes>> findDiaries(
+            @Parameter(description = "AccessToken 을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+            @ModelAttribute DiariesSearchCondition diariesSearchCondition,
+            @Parameter(description = "조회 할 페이지와 페이지 크기를 입력해주세요.") Pageable pageable
+    ) {
+        return ResponseCustom.OK(diaryService.findDiariesByContent(userPrincipal, diariesSearchCondition, pageable));
     }
 }
