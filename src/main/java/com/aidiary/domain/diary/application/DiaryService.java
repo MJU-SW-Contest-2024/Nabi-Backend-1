@@ -3,12 +3,15 @@ package com.aidiary.domain.diary.application;
 import com.aidiary.domain.diary.domain.Diary;
 import com.aidiary.domain.diary.domain.repository.DiaryRepository;
 import com.aidiary.domain.diary.dto.*;
+import com.aidiary.domain.diary.dto.condition.DiariesSearchCondition;
 import com.aidiary.domain.user.domain.User;
 import com.aidiary.domain.user.domain.repository.UserRepository;
 import com.aidiary.global.config.security.token.UserPrincipal;
 import com.aidiary.global.payload.Message;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -112,5 +115,12 @@ public class DiaryService {
 
         return diaryDetailsRes;
 
+    }
+
+    public Page<SearchDiariesRes> findDiariesByContent(UserPrincipal userPrincipal, DiariesSearchCondition diariesSearchCondition, Pageable pageable) {
+        User user = userRepository.findById(userPrincipal.getId())
+                .orElseThrow(EntityNotFoundException::new);
+
+        return diaryRepository.findDiaries(user, diariesSearchCondition, pageable);
     }
 }
