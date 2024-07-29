@@ -1,22 +1,23 @@
 package com.aidiary.domain.diary.domain.repository;
 
-import com.aidiary.domain.diary.domain.QDiary;
 import com.aidiary.domain.diary.dto.QSearchDiariesRes;
 import com.aidiary.domain.diary.dto.SearchDiariesRes;
 import com.aidiary.domain.diary.dto.condition.DiariesSearchCondition;
+import com.aidiary.domain.emotion.dto.DiarysByEmotionRes;
 import com.aidiary.domain.emotion.dto.EmotionStatRes;
+import com.aidiary.domain.emotion.dto.QDiarysByEmotionRes;
 import com.aidiary.domain.emotion.dto.QEmotionStatRes;
 import com.aidiary.domain.home.dto.HomeViewRes;
 import com.aidiary.domain.home.dto.QHomeViewRes;
 import com.aidiary.domain.user.domain.User;
-import com.aidiary.global.config.security.token.UserPrincipal;
-import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
@@ -144,6 +145,37 @@ public class DiaryQueryDslRepositoryImpl implements DiaryQueryDslRepository {
         return PageableExecutionUtils.getPage(results, pageable, countQuery::fetchOne);
     }
 
+    @Override
+    public Slice<DiarysByEmotionRes> findAllByEmotionAndUserId(String emotion, Long userId, Pageable pageable) {
+        List<DiarysByEmotionRes> results = queryFactory
+                .select(new QDiarysByEmotionRes(
+                        diary.content,
+                        diary.diaryEntryDate
+                ))
+                .from(diary)
+                .where(diary.emotion.eq(emotion),
+                        diary.user.id.eq(userId)
+                )
+                .orderBy(diary.diaryEntryDate.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+
+        return toSlice(results, pageable);
+    }
+
+    private Slice<DiarysByEmotionRes> toSlice(List<DiarysByEmotionRes> results, Pageable pageable) {
+        int pageSize = pageable.getPageSize();
+        boolean hasNext = false;
+
+        if (results.size() > pageSize) {
+            hasNext = true;
+            results.remove(pageSize);
+        }
+        return new SliceImpl<>(results, pageable, hasNext);
+    }
+
     public BooleanExpression equalsUser(User user) {
         return user != null ? diary.user.eq(user) : null;
     }
@@ -154,6 +186,5 @@ public class DiaryQueryDslRepositoryImpl implements DiaryQueryDslRepository {
                 content, Expressions.constant(keyword)
         );
     }
-
 
 }
