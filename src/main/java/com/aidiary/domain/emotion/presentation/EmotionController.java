@@ -4,6 +4,7 @@ import com.aidiary.domain.diary.domain.repository.DiaryRepository;
 import com.aidiary.domain.emotion.application.EmotionService;
 import com.aidiary.domain.emotion.dto.ChatGPTReq;
 import com.aidiary.domain.emotion.dto.ChatGPTRes;
+import com.aidiary.domain.emotion.dto.DiarysByEmotionRes;
 import com.aidiary.domain.emotion.dto.EmotionStatRes;
 import com.aidiary.global.config.security.token.CurrentUser;
 import com.aidiary.global.config.security.token.UserPrincipal;
@@ -20,6 +21,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cglib.core.Local;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -86,5 +90,19 @@ public class EmotionController {
             @PathVariable LocalDate endDate
             ) {
         return ResponseCustom.OK(emotionService.loadEmotionStat(userPrincipal, startDate, endDate));
+    }
+
+    @Operation(summary = "감정 별 일기 조회", description = "감정 별 일기들을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "감정 별 일기 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = DiarysByEmotionRes.class))}),
+            @ApiResponse(responseCode = "400", description = "감정 별 일기 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @GetMapping("/search")
+    public ResponseCustom<Slice<DiarysByEmotionRes>> findDiarysByEmotion(
+            @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+            @Parameter(description = "감정(행복, 우울, 화남, 불안)을 입력해주세요.", required = true) @RequestParam String emotion,
+            @Parameter(description = "조회할 페이지 크기를 입력해주세요.") @PageableDefault(size = 4) Pageable pageable
+    ) {
+        return ResponseCustom.OK(emotionService.findDiarys(userPrincipal, emotion, pageable));
     }
 }
