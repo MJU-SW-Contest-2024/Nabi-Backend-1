@@ -2,6 +2,7 @@ package com.aidiary.domain.emotion.application;
 
 import com.aidiary.domain.diary.domain.Diary;
 import com.aidiary.domain.diary.domain.repository.DiaryRepository;
+import com.aidiary.domain.emotion.dto.DiarysByEmotionRes;
 import com.aidiary.domain.emotion.dto.EmotionStatRes;
 import com.aidiary.domain.user.domain.User;
 import com.aidiary.domain.user.domain.repository.UserRepository;
@@ -9,10 +10,13 @@ import com.aidiary.global.config.security.token.UserPrincipal;
 import com.aidiary.global.payload.Message;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -60,10 +64,17 @@ public class EmotionService {
                 .build();
     }
 
+    @Transactional
     public EmotionStatRes loadEmotionStat(UserPrincipal userPrincipal, LocalDate startDate, LocalDate endDate) {
 
         EmotionStatRes emotionsCountBetweenStartDateAndEndDate = diaryRepository.findEmotionsCountBetweenStartDateAndEndDate(userPrincipal.getId(), startDate, endDate);
 
         return emotionsCountBetweenStartDateAndEndDate;
+    }
+
+    @Transactional
+    public Slice<DiarysByEmotionRes> findDiarys(UserPrincipal userPrincipal, String emotion, Pageable pageable) {
+        Slice<DiarysByEmotionRes> allByEmotionAndUserId = diaryRepository.findAllByEmotionAndUserId(emotion, userPrincipal.getId(), pageable);
+        return allByEmotionAndUserId;
     }
 }
