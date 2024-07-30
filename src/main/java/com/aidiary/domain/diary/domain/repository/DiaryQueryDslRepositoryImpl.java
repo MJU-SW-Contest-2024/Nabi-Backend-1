@@ -1,5 +1,7 @@
 package com.aidiary.domain.diary.domain.repository;
 
+import com.aidiary.domain.diary.dto.DiaryDetailsRes;
+import com.aidiary.domain.diary.dto.QDiaryDetailsRes;
 import com.aidiary.domain.diary.dto.QSearchDiariesRes;
 import com.aidiary.domain.diary.dto.SearchDiariesRes;
 import com.aidiary.domain.diary.dto.condition.DiariesSearchCondition;
@@ -163,6 +165,26 @@ public class DiaryQueryDslRepositoryImpl implements DiaryQueryDslRepository {
 
 
         return toSlice(results, pageable);
+    }
+
+    @Override
+    public List<DiaryDetailsRes> findByUserIdWithYearAndMonth(Long id, int year, int month) {
+        List<DiaryDetailsRes> results = queryFactory
+                .select(new QDiaryDetailsRes(
+                        diary.id,
+                        diary.user.nickname,
+                        diary.content,
+                        diary.diaryEntryDate,
+                        diary.emotion
+                ))
+                .from(diary)
+                .where(diary.user.id.eq(id),
+                        diary.diaryEntryDate.year().eq(year),
+                        diary.diaryEntryDate.month().eq(month))
+                .orderBy(diary.diaryEntryDate.asc())
+                .fetch();
+
+        return results;
     }
 
     private Slice<DiarysByEmotionRes> toSlice(List<DiarysByEmotionRes> results, Pageable pageable) {
