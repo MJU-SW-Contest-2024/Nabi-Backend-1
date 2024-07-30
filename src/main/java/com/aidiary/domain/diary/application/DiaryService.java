@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.AccessDeniedException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -117,10 +118,18 @@ public class DiaryService {
 
     }
 
+    @Transactional
     public Page<SearchDiariesRes> findDiariesByContent(UserPrincipal userPrincipal, DiariesSearchCondition diariesSearchCondition, Pageable pageable) {
         User user = userRepository.findById(userPrincipal.getId())
                 .orElseThrow(EntityNotFoundException::new);
 
         return diaryRepository.findDiaries(user, diariesSearchCondition, pageable);
+    }
+
+    @Transactional
+    public List<DiaryDetailsRes> findMonthlyDiaries(UserPrincipal userPrincipal, int year, int month) {
+        User user = userRepository.findById(userPrincipal.getId())
+                .orElseThrow(EntityNotFoundException::new);
+        return diaryRepository.findByUserIdWithYearAndMonth(user.getId(), year, month);
     }
 }
