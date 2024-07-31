@@ -30,6 +30,8 @@ public class User extends BaseEntity {
 
     private boolean isRegistered;
 
+    private String fcmToken;
+
 
     @Builder
     public User(String nickname, String username, String email, String role, String provider, String providerId) {
@@ -48,5 +50,9 @@ public class User extends BaseEntity {
 
     public void updateIsRegistered() {
         this.isRegistered = true;
+    }
+
+    public void updateFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 }

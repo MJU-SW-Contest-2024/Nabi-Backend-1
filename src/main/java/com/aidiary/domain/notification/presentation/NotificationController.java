@@ -16,7 +16,7 @@ import java.io.IOException;
 @RequestMapping("/fcm")
 public class NotificationController {
 
-    private FcmService fcmService;
+    private final FcmService fcmService;
 
 
     @PostMapping
