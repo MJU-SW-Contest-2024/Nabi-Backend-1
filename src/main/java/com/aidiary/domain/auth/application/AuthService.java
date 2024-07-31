@@ -65,4 +65,11 @@ public class AuthService {
 
         return nicknameRes;
     }
+
+    @Transactional
+    public void updateFcmToken(Long id, String fcmToken) {
+        User user = userRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
+        user.updateFcmToken(fcmToken);
+    }
 }
