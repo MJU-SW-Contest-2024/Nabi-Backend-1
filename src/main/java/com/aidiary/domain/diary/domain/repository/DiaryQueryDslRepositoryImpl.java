@@ -1,5 +1,7 @@
 package com.aidiary.domain.diary.domain.repository;
 
+import com.aidiary.domain.bookmark.domain.QBookmark;
+import com.aidiary.domain.diary.domain.Diary;
 import com.aidiary.domain.diary.dto.DiaryDetailsRes;
 import com.aidiary.domain.diary.dto.QDiaryDetailsRes;
 import com.aidiary.domain.diary.dto.QSearchDiariesRes;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.aidiary.domain.bookmark.domain.QBookmark.bookmark;
 import static com.aidiary.domain.diary.domain.QDiary.*;
 
 @RequiredArgsConstructor
@@ -40,9 +43,11 @@ public class DiaryQueryDslRepositoryImpl implements DiaryQueryDslRepository {
                 .select(new QHomeViewRes(
                         diary.content,
                         diary.diaryEntryDate,
-                        diary.emotion
+                        diary.emotion,
+                        bookmark.id.isNotNull()
                 ))
                 .from(diary)
+                .leftJoin(bookmark).on(diary.id.eq(bookmark.diary.id))
                 .orderBy(diary.diaryEntryDate.desc())
                 .limit(5)
                 .fetch();
@@ -175,9 +180,11 @@ public class DiaryQueryDslRepositoryImpl implements DiaryQueryDslRepository {
                         diary.user.nickname,
                         diary.content,
                         diary.diaryEntryDate,
-                        diary.emotion
+                        diary.emotion,
+                        bookmark.id.isNotNull()
                 ))
                 .from(diary)
+                .leftJoin(bookmark).on(diary.id.eq(bookmark.diary.id))
                 .where(diary.user.id.eq(id),
                         diary.diaryEntryDate.year().eq(year),
                         diary.diaryEntryDate.month().eq(month))
@@ -185,6 +192,28 @@ public class DiaryQueryDslRepositoryImpl implements DiaryQueryDslRepository {
                 .fetch();
 
         return results;
+    }
+
+    @Override
+    public DiaryDetailsRes findOneByUserIdAndDiaryId(Long userId, Long diaryId) {
+
+        DiaryDetailsRes diaryDetailsRes = queryFactory
+                .select(new QDiaryDetailsRes(
+                        diary.id,
+                        diary.user.nickname,
+                        diary.content,
+                        diary.diaryEntryDate,
+                        diary.emotion,
+                        bookmark.id.isNotNull()
+                        ))
+                .from(diary)
+                .leftJoin(bookmark).on(diary.id.eq(bookmark.diary.id))
+                .where(diary.user.id.eq(userId),
+                        diary.id.eq(diaryId)
+                )
+                .fetchOne();
+
+        return diaryDetailsRes;
     }
 
     private Slice<DiarysByEmotionRes> toSlice(List<DiarysByEmotionRes> results, Pageable pageable) {

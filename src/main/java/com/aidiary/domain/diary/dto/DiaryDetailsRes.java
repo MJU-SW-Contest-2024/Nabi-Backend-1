@@ -11,14 +11,16 @@ public record DiaryDetailsRes(
         String nickname,
         String content,
         LocalDate diaryEntryDate,
-        String emotion
+        String emotion,
+        Boolean isBookmarked
 ) {
     @QueryProjection
-    public DiaryDetailsRes(Long diaryId, String nickname, String content, LocalDate diaryEntryDate, String emotion) {
+    public DiaryDetailsRes(Long diaryId, String nickname, String content, LocalDate diaryEntryDate, String emotion, Boolean isBookmarked) {
         this.diaryId = diaryId;
         this.nickname = nickname;
         this.content = content;
         this.diaryEntryDate = diaryEntryDate;
         this.emotion = emotion;
+        this.isBookmarked = isBookmarked;
     }
 }
