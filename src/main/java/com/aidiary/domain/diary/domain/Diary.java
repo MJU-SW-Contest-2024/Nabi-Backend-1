@@ -33,16 +33,12 @@ public class Diary extends BaseEntity {
     @Column(name = "emotion")
     private String emotion;
 
-    @Column(name = "is_bookmarked")
-    private Boolean isBookmarked;
-
 
     @Builder
     public Diary(User user, String content, LocalDate diaryEntryDate) {
         this.user = user;
         this.content = content;
         this.diaryEntryDate = diaryEntryDate;
-        this.isBookmarked = false;
     }
 
     public void updateContent(String content) {
@@ -57,7 +53,4 @@ public class Diary extends BaseEntity {
         this.emotion = emotion;
     }
 
-    public void updateBookmark(boolean bookmark) {
-        this.isBookmarked = bookmark;
-    }
 }

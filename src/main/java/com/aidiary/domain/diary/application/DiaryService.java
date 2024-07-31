@@ -106,15 +106,9 @@ public class DiaryService {
         }
 
 
-        DiaryDetailsRes diaryDetailsRes = DiaryDetailsRes.builder()
-                .diaryId(diary.getId())
-                .nickname(user.getNickname())
-                .content(diary.getContent())
-                .diaryEntryDate(diary.getDiaryEntryDate())
-                .emotion(diary.getEmotion())
-                .build();
+        DiaryDetailsRes oneByUserIdAndDiaryId = diaryRepository.findOneByUserIdAndDiaryId(userPrincipal.getId(), diaryId);
 
-        return diaryDetailsRes;
+        return oneByUserIdAndDiaryId;
 
     }
 

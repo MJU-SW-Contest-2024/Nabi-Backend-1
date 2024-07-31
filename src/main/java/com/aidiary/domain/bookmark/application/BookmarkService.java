@@ -49,11 +49,33 @@ public class BookmarkService {
                 .build();
 
         bookmarkRepository.save(bookmark);
-        diary.updateBookmark(true);
 
         return Message
                 .builder()
                 .message("해당 일기에 북마크를 추가했습니다.")
+                .build();
+    }
+
+    @Transactional
+    public Message deleteDiaryBookmark(UserPrincipal userPrincipal, Long diaryId) {
+        User user = userRepository.findById(userPrincipal.getId())
+                .orElseThrow(EntityNotFoundException::new);
+        Diary diary = diaryRepository.findById(diaryId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        if (bookmarkRepository.findByUserAndDiary(user, diary).isEmpty()) {
+            return Message.builder()
+                    .message("북마크 데이터를 찾을 수 없습니다.")
+                    .build();
+        }
+
+        Bookmark bookmark = bookmarkRepository.findByUserIdAndDiaryId(userPrincipal.getId(), diaryId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        bookmarkRepository.delete(bookmark);
+
+        return Message.builder()
+                .message("해당 일기의 북마크를 삭제했습니다.")
                 .build();
     }
 }

@@ -1,5 +1,6 @@
 package com.aidiary.domain.diary.domain.repository;
 
+import com.aidiary.domain.diary.domain.Diary;
 import com.aidiary.domain.diary.dto.DiaryDetailsRes;
 import com.aidiary.domain.diary.dto.SearchDiariesRes;
 import com.aidiary.domain.diary.dto.condition.DiariesSearchCondition;
@@ -28,4 +29,6 @@ public interface DiaryQueryDslRepository {
     Slice<DiarysByEmotionRes> findAllByEmotionAndUserId(String emotion, Long id, Pageable pageable);
 
     List<DiaryDetailsRes> findByUserIdWithYearAndMonth(Long id, int year, int month);
+
+    DiaryDetailsRes findOneByUserIdAndDiaryId(Long id, Long diaryId);
 }
