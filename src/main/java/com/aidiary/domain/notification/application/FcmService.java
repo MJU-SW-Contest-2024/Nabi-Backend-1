@@ -1,10 +1,16 @@
 package com.aidiary.domain.notification.application;
 
 import com.aidiary.domain.notification.dto.FcmMessage;
+import com.aidiary.domain.notification.dto.FcmTokenReq;
+import com.aidiary.domain.user.domain.User;
+import com.aidiary.domain.user.domain.repository.UserRepository;
+import com.aidiary.global.config.security.token.UserPrincipal;
+import com.aidiary.global.payload.Message;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import okhttp3.*;
 import org.springframework.core.io.ClassPathResource;
@@ -23,6 +29,8 @@ public class FcmService {
     private final String API_URL = "https://fcm.googleapis.com/v1/projects/" +
             "nabi-ffce7/messages:send";
     private final ObjectMapper objectMapper;
+
+    private final UserRepository userRepository;
 
     @Transactional
     public void sendMessageTo(String targetToken, String title, String body) throws IOException {
@@ -68,4 +76,23 @@ public class FcmService {
         return googleCredentials.getAccessToken().getTokenValue();
     }
 
+    @Transactional
+    public synchronized Message register(UserPrincipal userPrincipal, FcmTokenReq fcmTokenReq) {
+        User user = userRepository.findById(userPrincipal.getId())
+                .orElseThrow(EntityNotFoundException::new);
+
+        if (fcmTokenReq.fcmToken().isEmpty()) {
+            return Message
+                    .builder()
+                    .message("fcmToken이 비어 있습니다.")
+                    .build();
+        }
+
+        user.updateFcmToken(fcmTokenReq.fcmToken());
+
+        return Message
+                .builder()
+                .message("fcmToken이 등록되었습니다.")
+                .build();
+    }
 }
