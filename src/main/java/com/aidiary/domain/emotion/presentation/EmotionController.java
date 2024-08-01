@@ -58,7 +58,7 @@ public class EmotionController {
             @Parameter(description = "판정할 일기의 id를 입력해주세요.", required = true) @PathVariable Long diaryId
     ) {
         String prompt = emotionService.loadDiaryContent(userPrincipal, diaryId);
-        String concatedPrompt = prompt.concat("\n위 일기 내용에 대한 지배적인 감정 한가지를 '우울', '불안', '화남', '행복' 중 1개 골라서 판정해줘.");
+        String concatedPrompt = prompt.concat("\n위 일기 내용에 대한 지배적인 감정 한가지를 '우울', '불안', '화남', '행복', '지루함' 중 1개 골라서 판정해줘.");
         ChatGPTReq request = new ChatGPTReq(model, concatedPrompt);
         ChatGPTRes chatGPTRes = restTemplate.postForObject(apiURL, request, ChatGPTRes.class);
         return ResponseCustom.OK(chatGPTRes.getChoices().get(0).getMessage().getContent());
