@@ -29,6 +29,7 @@ public class UserInfoController {
 
     private final UserInfoService userInfoService;
 
+
     @Operation(summary = "유저 정보 조회", description = "해당 유저의 정보를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "유저 정보 조회 성공", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserInfoRes.class)))}),
