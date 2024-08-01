@@ -1,5 +1,6 @@
 package com.aidiary.domain.notification.presentation;
 
+import com.aidiary.domain.auth.dto.AuthRes;
 import com.aidiary.domain.notification.application.FcmService;
 import com.aidiary.domain.notification.dto.FcmReq;
 import com.aidiary.domain.notification.dto.FcmTokenReq;
