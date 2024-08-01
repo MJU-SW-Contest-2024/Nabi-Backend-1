@@ -62,7 +62,6 @@ public class AuthController {
         User user = userRepository.findByProviderId(providerId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        authService.updateFcmToken(user.getId(), idTokenReq.fcmToken());
 
         AuthRes authRes = AuthRes.builder()
                 .accessToken(accessToken)
