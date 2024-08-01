@@ -5,7 +5,6 @@ import com.aidiary.domain.userInfo.dto.UserInfoRes;
 import com.aidiary.global.config.security.token.CurrentUser;
 import com.aidiary.global.config.security.token.UserPrincipal;
 import com.aidiary.global.payload.ErrorResponse;
-import com.aidiary.global.payload.Message;
 import com.aidiary.global.payload.ResponseCustom;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,7 +14,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserInfoController {
 
     private final UserInfoService userInfoService;
+
 
     @Operation(summary = "유저 정보 조회", description = "해당 유저의 정보를 조회합니다.")
     @ApiResponses(value = {
