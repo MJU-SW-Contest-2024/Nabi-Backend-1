@@ -3,13 +3,11 @@ package com.aidiary.domain.summary.domain;
 import com.aidiary.domain.common.BaseEntity;
 import com.aidiary.domain.user.domain.User;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 @Getter
 @Entity
-@RequiredArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DiarySummary extends BaseEntity {
 
     @Id
