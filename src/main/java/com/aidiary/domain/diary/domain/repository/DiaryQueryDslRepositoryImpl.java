@@ -106,6 +106,11 @@ public class DiaryQueryDslRepositoryImpl implements DiaryQueryDslRepository {
                 .otherwise(0)
                 .sum();
 
+        NumberExpression<Integer> boringCount = new CaseBuilder()
+                .when(diary.emotion.eq("지루함")).then(1)
+                .otherwise(0)
+                .sum();
+
         return queryFactory
                 .select(new QEmotionStatRes(
                         angerCount,
@@ -132,8 +137,7 @@ public class DiaryQueryDslRepositoryImpl implements DiaryQueryDslRepository {
         results = queryFactory
                 .select(new QSearchDiariesRes(
                         getExcerpt(diary.content, content),
-                        diary.diaryEntryDate,
-                        Expressions.constant("test")
+                        diary.diaryEntryDate
                 ))
                 .from(diary)
                 .where(diary.content.contains(content),
@@ -233,7 +237,7 @@ public class DiaryQueryDslRepositoryImpl implements DiaryQueryDslRepository {
 
     private StringTemplate getExcerpt(StringPath content, String keyword) {
         return Expressions.stringTemplate(
-                "concat(substring({0}, greatest(1, locate({1}, {0}) - 10), least(locate({1}, {0}) - greatest(1, locate({1}, {0}) - 10), 10)), {1}, substring({0}, locate({1}, {0}) + length({1}), 10))",
+                "concat(substring({0}, greatest(1, locate({1}, {0}) - 25), least(locate({1}, {0}) - greatest(1, locate({1}, {0}) - 25), 25)), {1}, substring({0}, locate({1}, {0}) + length({1}), 25))",
                 content, Expressions.constant(keyword)
         );
     }
