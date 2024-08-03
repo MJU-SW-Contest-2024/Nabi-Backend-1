@@ -136,6 +136,7 @@ public class DiaryQueryDslRepositoryImpl implements DiaryQueryDslRepository {
 
         results = queryFactory
                 .select(new QSearchDiariesRes(
+                        diary.id,
                         getExcerpt(diary.content, content),
                         diary.diaryEntryDate
                 ))
