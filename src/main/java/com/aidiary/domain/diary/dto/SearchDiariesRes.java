@@ -8,14 +8,12 @@ import java.time.LocalDate;
 @Builder
 public record SearchDiariesRes(
         String previewContent,
-        LocalDate diaryEntryDate,
-        String surroundingText
+        LocalDate diaryEntryDate
 ) {
 
     @QueryProjection
-    public SearchDiariesRes(String previewContent, LocalDate diaryEntryDate, String surroundingText) {
+    public SearchDiariesRes(String previewContent, LocalDate diaryEntryDate) {
         this.previewContent = previewContent;
         this.diaryEntryDate = diaryEntryDate;
-        this.surroundingText = surroundingText;
     }
 }
