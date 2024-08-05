@@ -24,6 +24,7 @@ import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -86,8 +87,8 @@ public class EmotionController {
     @GetMapping("/{startDate}/{endDate}")
     public ResponseCustom<EmotionStatRes> getEmotionStat(
             @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
-            @PathVariable LocalDate startDate,
-            @PathVariable LocalDate endDate
+            @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+            @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate
             ) {
         return ResponseCustom.OK(emotionService.loadEmotionStat(userPrincipal, startDate, endDate));
     }
