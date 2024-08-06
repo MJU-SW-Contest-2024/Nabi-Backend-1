@@ -41,6 +41,7 @@ public class DiaryQueryDslRepositoryImpl implements DiaryQueryDslRepository {
     public List<HomeViewRes> findRecentFiveDiaryWithAuthorization(Long userId) {
         return queryFactory
                 .select(new QHomeViewRes(
+                        diary.id,
                         diary.content,
                         diary.diaryEntryDate,
                         diary.emotion,

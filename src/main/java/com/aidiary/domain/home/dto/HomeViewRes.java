@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 @Builder
 public record HomeViewRes(
+        Long diaryId,
         String content,
         LocalDate diaryEntryDate,
         String emotion,
@@ -14,7 +15,8 @@ public record HomeViewRes(
 ) {
 
     @QueryProjection
-    public HomeViewRes(String content, LocalDate diaryEntryDate, String emotion, Boolean isBookmarked) {
+    public HomeViewRes(Long diaryId, String content, LocalDate diaryEntryDate, String emotion, Boolean isBookmarked) {
+        this.diaryId = diaryId;
         this.content = content;
         this.diaryEntryDate = diaryEntryDate;
         this.emotion = emotion;
