@@ -164,6 +164,7 @@ public class DiaryQueryDslRepositoryImpl implements DiaryQueryDslRepository {
     public Slice<DiarysByEmotionRes> findAllByEmotionAndUserId(String emotion, Long userId, Pageable pageable) {
         List<DiarysByEmotionRes> results = queryFactory
                 .select(new QDiarysByEmotionRes(
+                        diary.id,
                         diary.content,
                         diary.diaryEntryDate
                 ))

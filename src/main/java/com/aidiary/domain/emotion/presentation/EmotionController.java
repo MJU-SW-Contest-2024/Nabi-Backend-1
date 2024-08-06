@@ -103,7 +103,7 @@ public class EmotionController {
     @GetMapping("/search")
     public ResponseCustom<Slice<DiarysByEmotionRes>> findDiarysByEmotion(
             @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
-            @Parameter(description = "감정(행복, 우울, 화남, 불안)을 입력해주세요.", required = true) @RequestParam String emotion,
+            @Parameter(description = "감정(행복, 우울, 화남, 불안, 지루함)을 입력해주세요.", required = true) @RequestParam String emotion,
             @Parameter(description = "조회할 페이지 크기를 입력해주세요.") @PageableDefault(size = 4) Pageable pageable
     ) {
         return ResponseCustom.OK(emotionService.findDiarys(userPrincipal, emotion, pageable));
