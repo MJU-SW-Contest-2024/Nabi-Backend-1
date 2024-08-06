@@ -87,10 +87,12 @@ public class EmotionController {
     @GetMapping("/{startDate}/{endDate}")
     public ResponseCustom<EmotionStatRes> getEmotionStat(
             @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
-            @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-            @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate
+            @PathVariable String startDate,
+            @PathVariable String endDate
             ) {
-        return ResponseCustom.OK(emotionService.loadEmotionStat(userPrincipal, startDate, endDate));
+        LocalDate parsedStartDate = LocalDate.parse(startDate);
+        LocalDate parsedEndDate = LocalDate.parse(endDate);
+        return ResponseCustom.OK(emotionService.loadEmotionStat(userPrincipal, parsedStartDate, parsedEndDate));
     }
 
     @Operation(summary = "감정 별 일기 조회", description = "감정 별 일기들을 조회합니다.")

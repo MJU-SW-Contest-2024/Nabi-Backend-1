@@ -64,7 +64,6 @@ public class EmotionService {
                 .build();
     }
 
-    @Transactional
     public EmotionStatRes loadEmotionStat(UserPrincipal userPrincipal, LocalDate startDate, LocalDate endDate) {
 
         EmotionStatRes emotionsCountBetweenStartDateAndEndDate = diaryRepository.findEmotionsCountBetweenStartDateAndEndDate(userPrincipal.getId(), startDate, endDate);
