@@ -117,7 +117,8 @@ public class DiaryQueryDslRepositoryImpl implements DiaryQueryDslRepository {
                         angerCount,
                         depressionCount,
                         anxietyCount,
-                        happinessCount
+                        happinessCount,
+                        boringCount
                 ))
                 .from(diary)
                 .where(

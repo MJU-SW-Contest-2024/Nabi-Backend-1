@@ -8,14 +8,16 @@ public record EmotionStatRes(
         Integer angerCount,
         Integer depressionCount,
         Integer anxietyCount,
-        Integer Happiness
+        Integer HappinessCount,
+        Integer BoringCount
 ) {
 
     @QueryProjection
-    public EmotionStatRes(Integer angerCount, Integer depressionCount, Integer anxietyCount, Integer Happiness) {
+    public EmotionStatRes(Integer angerCount, Integer depressionCount, Integer anxietyCount, Integer HappinessCount, Integer BoringCount) {
         this.angerCount = angerCount;
         this.depressionCount = depressionCount;
         this.anxietyCount = anxietyCount;
-        this.Happiness = Happiness;
+        this.HappinessCount = HappinessCount;
+        this.BoringCount = BoringCount;
     }
 }
