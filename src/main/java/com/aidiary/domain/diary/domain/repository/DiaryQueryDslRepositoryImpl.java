@@ -49,6 +49,7 @@ public class DiaryQueryDslRepositoryImpl implements DiaryQueryDslRepository {
                 ))
                 .from(diary)
                 .leftJoin(bookmark).on(diary.id.eq(bookmark.diary.id))
+                .where(diary.user.id.eq(userId))
                 .orderBy(diary.diaryEntryDate.desc())
                 .limit(5)
                 .fetch();
