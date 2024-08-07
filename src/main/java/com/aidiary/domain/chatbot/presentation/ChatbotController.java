@@ -56,6 +56,7 @@ public class ChatbotController {
             @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
     ) {
         String fastApiUrl = addDiaryUrl;
+//        String fastApiUrl = "http://127.0.0.1:8000/add_diary";
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
@@ -82,6 +83,7 @@ public class ChatbotController {
             @RequestBody ChatReq chatReq
     ) {
         String fastApiUrl = queryUrl;
+//        String fastApiUrl = "http://127.0.0.1:8000/query";
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
