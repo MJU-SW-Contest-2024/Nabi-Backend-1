@@ -103,10 +103,10 @@ public class ChatbotController {
         return ResponseCustom.OK(message);
     }
 
-    @Operation(summary = "챗봇과 대화하기", description = "임베딩된 일기를 바탕으로 챗봇과 대화합니다.")
+    @Operation(summary = "챗봇 대화 히스토리 가져오기", description = "챗봇과의 대화 내역을 조회합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "챗봇 대화 성공", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ChatHistoryRes.class)))}),
-            @ApiResponse(responseCode = "400", description = "챗봇 대화 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "200", description = "챗봇 대화 내용 조회 성공", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ChatHistoryRes.class)))}),
+            @ApiResponse(responseCode = "400", description = "챗봇 대화 내용 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
     @GetMapping("/history")
     public ResponseCustom<Page<ChatHistoryRes>> getAllChatHistories(
