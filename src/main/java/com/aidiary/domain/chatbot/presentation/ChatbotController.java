@@ -1,13 +1,13 @@
 package com.aidiary.domain.chatbot.presentation;
 
 import com.aidiary.domain.chatbot.application.ChatbotService;
+import com.aidiary.domain.chatbot.dto.ChatHistoryRes;
 import com.aidiary.domain.chatbot.dto.ChatReq;
 import com.aidiary.domain.chatbot.dto.DiaryEmbeddingReq;
 import com.aidiary.domain.chatbot.dto.QueryReq;
 import com.aidiary.global.config.security.token.CurrentUser;
 import com.aidiary.global.config.security.token.UserPrincipal;
 import com.aidiary.global.payload.ErrorResponse;
-import com.aidiary.global.payload.Message;
 import com.aidiary.global.payload.ResponseCustom;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,13 +21,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 @Tag(name = "Chatbot", description = "Chatbot API")
@@ -102,5 +101,18 @@ public class ChatbotController {
         chatbotService.registerBotChat(userPrincipal, message);
 
         return ResponseCustom.OK(message);
+    }
+
+    @Operation(summary = "챗봇과 대화하기", description = "임베딩된 일기를 바탕으로 챗봇과 대화합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "챗봇 대화 성공", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ChatHistoryRes.class)))}),
+            @ApiResponse(responseCode = "400", description = "챗봇 대화 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @GetMapping("/history")
+    public ResponseCustom<Page<ChatHistoryRes>> getAllChatHistories(
+            @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+            @Parameter(description = "조회 할 페이지와 페이지 크기를 입력해주세요.") Pageable pageable
+    ) {
+        return ResponseCustom.OK(chatbotService.getAllChats(userPrincipal, pageable));
     }
 }
