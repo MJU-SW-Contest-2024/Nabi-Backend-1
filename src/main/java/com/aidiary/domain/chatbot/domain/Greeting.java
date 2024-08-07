@@ -1,4 +1,4 @@
-package com.aidiary.domain.notification.domain;
+package com.aidiary.domain.chatbot.domain;
 
 import com.aidiary.domain.common.BaseEntity;
 import jakarta.persistence.Entity;
