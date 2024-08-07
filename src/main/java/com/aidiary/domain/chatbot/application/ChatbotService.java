@@ -3,6 +3,7 @@ package com.aidiary.domain.chatbot.application;
 import com.aidiary.domain.chatbot.domain.ChatHistory;
 import com.aidiary.domain.chatbot.domain.ChatRole;
 import com.aidiary.domain.chatbot.domain.repository.ChatHistoryRepository;
+import com.aidiary.domain.chatbot.dto.ChatHistoryRes;
 import com.aidiary.domain.chatbot.dto.DiaryEmbeddingReq;
 import com.aidiary.domain.chatbot.dto.QueryReq;
 import com.aidiary.domain.summary.domain.DiarySummary;
@@ -10,14 +11,16 @@ import com.aidiary.domain.summary.domain.repository.DiarySummaryRepository;
 import com.aidiary.domain.user.domain.User;
 import com.aidiary.domain.user.domain.repository.UserRepository;
 import com.aidiary.global.config.security.token.UserPrincipal;
+import com.aidiary.global.payload.ResponseCustom;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -91,5 +94,9 @@ public class ChatbotService {
                 .chatRole(ChatRole.BOT)
                 .build();
         chatHistoryRepository.save(chatHistory);
+    }
+
+    public Page<ChatHistoryRes> getAllChats(UserPrincipal userPrincipal, Pageable pageable) {
+        return chatHistoryRepository.findRecent20ChatHistories(userPrincipal.getId(), pageable);
     }
 }
