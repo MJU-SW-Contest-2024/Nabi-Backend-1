@@ -42,7 +42,8 @@ public class ChatHistoryQueryDslRepositoryImpl implements ChatHistoryQueryDslRep
                 .select(new QChatHistoryRes(
                         chatHistory.id,
                         chatHistory.message,
-                        chatHistory.chatRole
+                        chatHistory.chatRole,
+                        chatHistory.createdAt
                 ))
                 .from(chatHistory)
                 .where(chatHistory.user.id.eq(id))
