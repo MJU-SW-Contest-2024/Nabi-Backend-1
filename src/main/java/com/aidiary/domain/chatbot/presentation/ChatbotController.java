@@ -46,6 +46,19 @@ public class ChatbotController {
     private String queryUrl;
 
 
+    @Operation(summary = "챗봇 첫 인사", description = "챗봇의 첫 인사를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "첫 인사 조회 성공", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = String.class)))}),
+            @ApiResponse(responseCode = "400", description = "첫 인사 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @GetMapping("/greeting")
+    public ResponseCustom<?> initialGreeting(
+            @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
+    ) {
+        return ResponseCustom.OK(chatbotService.greeting(userPrincipal));
+    }
+
+
     @Operation(summary = "일기 임베딩", description = "유저의 일기를 AI 서버에 임베딩합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "일기 임베딩 성공", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = String.class)))}),
@@ -56,6 +69,7 @@ public class ChatbotController {
             @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
     ) {
         String fastApiUrl = addDiaryUrl;
+//        String fastApiUrl = "http://127.0.0.1:8000/add_diary";
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
@@ -82,6 +96,7 @@ public class ChatbotController {
             @RequestBody ChatReq chatReq
     ) {
         String fastApiUrl = queryUrl;
+//        String fastApiUrl = "http://127.0.0.1:8000/query";
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");

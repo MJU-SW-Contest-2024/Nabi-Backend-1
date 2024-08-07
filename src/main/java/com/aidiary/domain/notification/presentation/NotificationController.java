@@ -18,10 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -46,18 +43,17 @@ public class NotificationController {
         return ResponseCustom.OK(fcmService.register(userPrincipal, fcmTokenReq));
     }
 
-    @Operation(summary = "Test용 알람", description = "이 API는 Test용으로 서버측 에서만 현재 컨트롤 할 수 있습니다.")
-    @PostMapping
-    public ResponseCustom<?> pushMessage(@RequestBody FcmReq fcmReq) throws IOException {
-        System.out.println(fcmReq.targetToken() + " "
-                + fcmReq.title() + " " + fcmReq.body());
+    @Operation(summary = "모든 유저에게 알림 보내기", description = "모든 유저에게 알림을 보냅니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "알림 전송 성공", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = String.class)))}),
+            @ApiResponse(responseCode = "400", description = "알림 전송 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @PostMapping("/broadcast")
+    public ResponseCustom<?> broadcastMessage(@RequestBody FcmReq fcmReq) throws IOException {
 
-        fcmService.sendMessageTo(
-                fcmReq.targetToken(),
-                fcmReq.title(),
-                fcmReq.body()
-        );
+        fcmService.broadcastMessage(fcmReq.title(), fcmReq.body());
 
         return ResponseCustom.OK("Message is pushed");//
     }
+
 }

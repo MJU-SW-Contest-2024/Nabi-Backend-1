@@ -2,7 +2,9 @@ package com.aidiary.domain.chatbot.application;
 
 import com.aidiary.domain.chatbot.domain.ChatHistory;
 import com.aidiary.domain.chatbot.domain.ChatRole;
+import com.aidiary.domain.chatbot.domain.Greeting;
 import com.aidiary.domain.chatbot.domain.repository.ChatHistoryRepository;
+import com.aidiary.domain.chatbot.domain.repository.GreetingRepository;
 import com.aidiary.domain.chatbot.dto.ChatHistoryRes;
 import com.aidiary.domain.chatbot.dto.DiaryEmbeddingReq;
 import com.aidiary.domain.chatbot.dto.QueryReq;
@@ -11,7 +13,6 @@ import com.aidiary.domain.summary.domain.repository.DiarySummaryRepository;
 import com.aidiary.domain.user.domain.User;
 import com.aidiary.domain.user.domain.repository.UserRepository;
 import com.aidiary.global.config.security.token.UserPrincipal;
-import com.aidiary.global.payload.ResponseCustom;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,7 @@ public class ChatbotService {
     private final ChatHistoryRepository chatHistoryRepository;
     private final DiarySummaryRepository diarySummaryRepository;
     private final UserRepository userRepository;
+    private final GreetingRepository greetingRepository;
 
 
     @Transactional
@@ -124,5 +126,13 @@ public class ChatbotService {
                 .build();
 
         return queryReq;
+    }
+
+    public String greeting(UserPrincipal userPrincipal) {
+        User user = userRepository.findById(userPrincipal.getId())
+                .orElseThrow(EntityNotFoundException::new);
+        Greeting greeting = greetingRepository.findById(1L)
+                .orElseThrow(EntityNotFoundException::new);
+        return user.getNickname() + "! " + greeting.getInitialGreeting();
     }
 }
