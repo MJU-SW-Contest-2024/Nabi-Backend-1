@@ -53,7 +53,7 @@ public class NotificationController {
 
         fcmService.broadcastMessage(fcmReq.title(), fcmReq.body());
 
-        return ResponseCustom.OK("Message is pushed");//
+        return ResponseCustom.OK("Message is pushed");
     }
 
 }
