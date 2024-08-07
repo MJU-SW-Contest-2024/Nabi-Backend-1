@@ -58,6 +58,6 @@ public class NotificationController {
                 fcmReq.body()
         );
 
-        return ResponseCustom.OK("Message is pushed");
+        return ResponseCustom.OK("Message is pushed");//
     }
 }
