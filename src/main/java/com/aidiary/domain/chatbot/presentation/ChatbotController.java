@@ -115,4 +115,35 @@ public class ChatbotController {
     ) {
         return ResponseCustom.OK(chatbotService.getAllChats(userPrincipal, pageable));
     }
+
+    @Operation(summary = "챗봇에게 답변 다시 받기", description = "챗봇에게 가장 최근 질문으로 답변을 다시 받습니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "답변 다시 받기 성공", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = String.class)))}),
+            @ApiResponse(responseCode = "400", description = "답변 다시 받기 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @PostMapping("/retryChat")
+    public ResponseCustom<?> retryChat(
+            @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
+    ) {
+        String fastApiUrl = queryUrl;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+
+        QueryReq queryReq = chatbotService.retryQuery(userPrincipal);
+
+        log.info("Requesting FastAPI with QueryReq: {}", queryReq);
+
+        HttpEntity<QueryReq> requestEntity = new HttpEntity<>(queryReq, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity(fastApiUrl, requestEntity, String.class);
+
+        // JSON 응답에서 message 필드만 추출
+        JSONObject responseBody = new JSONObject(response.getBody());
+        String message = responseBody.getString("message");
+
+        // Bot 응답 저장
+        chatbotService.registerBotChat(userPrincipal, message);
+
+        return ResponseCustom.OK(message);
+    }
 }

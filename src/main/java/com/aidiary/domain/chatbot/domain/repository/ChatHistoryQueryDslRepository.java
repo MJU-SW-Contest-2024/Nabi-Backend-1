@@ -11,4 +11,6 @@ public interface ChatHistoryQueryDslRepository {
     List<ChatHistory> findRecentChatHistoryByUserId(Long id);
 
     Page<ChatHistoryRes> findRecent20ChatHistories(Long id, Pageable pageable);
+
+    ChatHistory findMostRecentChatHistoryByUserId(Long id);
 }
