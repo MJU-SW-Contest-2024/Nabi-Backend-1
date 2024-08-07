@@ -59,4 +59,15 @@ public class ChatHistoryQueryDslRepositoryImpl implements ChatHistoryQueryDslRep
 
         return PageableExecutionUtils.getPage(results, pageable, countQuery::fetchOne);
     }
+
+    @Override
+    public ChatHistory findMostRecentChatHistoryByUserId(Long id) {
+        return queryFactory
+                .select(chatHistory)
+                .from(chatHistory)
+                .where(chatHistory.user.id.eq(id))
+                .orderBy(chatHistory.id.desc())
+                .limit(1)
+                .fetchOne();
+    }
 }

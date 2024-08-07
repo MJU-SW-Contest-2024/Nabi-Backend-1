@@ -99,4 +99,30 @@ public class ChatbotService {
     public Page<ChatHistoryRes> getAllChats(UserPrincipal userPrincipal, Pageable pageable) {
         return chatHistoryRepository.findRecent20ChatHistories(userPrincipal.getId(), pageable);
     }
+
+    @Transactional
+    public QueryReq retryQuery(UserPrincipal userPrincipal) {
+        // 이전에 받은 BOT 챗을 삭제하고 다시 HUMAN 챗을 가장 최근 채팅으로 만든다.
+        ChatHistory mostRecentChat = chatHistoryRepository.findMostRecentChatHistoryByUserId(userPrincipal.getId());
+        chatHistoryRepository.delete(mostRecentChat);
+
+        // 챗 히스토리를 최근 20개 이하로 가져온다
+        List<ChatHistory> recentChatHistoryByUserId = chatHistoryRepository.findRecentChatHistoryByUserId(userPrincipal.getId());
+        List<String> chatHistoryList = recentChatHistoryByUserId.stream()
+                .map(chat -> String.format("%s: %s", chat.getChatRole() == ChatRole.USER ? "사용자" : "친구", chat.getMessage()))
+                .toList();
+
+
+        String question;
+        ChatHistory chatHistory = chatHistoryRepository.findMostRecentChatHistoryByUserId(userPrincipal.getId());
+        question = chatHistory.getMessage();
+
+        QueryReq queryReq = QueryReq.builder()
+                .userId(userPrincipal.getId().toString())
+                .question(question)
+                .chatHistory(chatHistoryList)
+                .build();
+
+        return queryReq;
+    }
 }
