@@ -20,10 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class FcmService {
 
     private final String API_URL = "https://fcm.googleapis.com/v1/projects/" +
@@ -94,5 +95,15 @@ public class FcmService {
                 .builder()
                 .message("fcmToken이 등록되었습니다.")
                 .build();
+    }
+
+    public void broadcastMessage(String title, String body) throws IOException {
+        List<String> tokens = userRepository.findAll().stream()
+                .map(User::getFcmToken)
+                .collect(Collectors.toList());
+
+        for (String token : tokens) {
+            sendMessageTo(token, title, body);
+        }
     }
 }
