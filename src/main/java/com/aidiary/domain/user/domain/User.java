@@ -1,9 +1,13 @@
 package com.aidiary.domain.user.domain;
 
+import com.aidiary.domain.chatbot.domain.ChatHistory;
 import com.aidiary.domain.common.BaseEntity;
 import com.aidiary.domain.summary.domain.DiarySummary;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,6 +37,9 @@ public class User extends BaseEntity {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
     private DiarySummary diarySummary;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatHistory> chatHistories = new ArrayList<>();
 
 
     @Builder
