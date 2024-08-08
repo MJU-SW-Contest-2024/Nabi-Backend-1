@@ -1,5 +1,6 @@
 package com.aidiary.domain.user.domain;
 
+import com.aidiary.domain.bookmark.domain.Bookmark;
 import com.aidiary.domain.chatbot.domain.ChatHistory;
 import com.aidiary.domain.common.BaseEntity;
 import com.aidiary.domain.summary.domain.DiarySummary;
@@ -37,6 +38,9 @@ public class User extends BaseEntity {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
     private DiarySummary diarySummary;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Bookmark> bookmark = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatHistory> chatHistories = new ArrayList<>();

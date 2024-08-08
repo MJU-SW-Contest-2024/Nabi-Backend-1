@@ -99,7 +99,7 @@ public class DiaryQueryDslRepositoryImpl implements DiaryQueryDslRepository {
                 .sum();
 
         NumberExpression<Integer> anxietyCount = new CaseBuilder()
-                .when(diary.emotion.eq("걱정")).then(1)
+                .when(diary.emotion.eq("불안")).then(1)
                 .otherwise(0)
                 .sum();
 
