@@ -23,15 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/users")
 public class UserController {
 
-//    private final UserService userService;
-//
-//    @Operation(summary = "회원 탈퇴", description = "해당 유저를 회원 탈퇴합니다.")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Message.class)))}),
-//            @ApiResponse(responseCode = "400", description = "회원 탈퇴 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
-//    })
-//    @DeleteMapping
-//    public ResponseCustom<Message>
 
 
 }

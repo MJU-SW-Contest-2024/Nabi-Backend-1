@@ -4,6 +4,7 @@ import com.aidiary.domain.auth.dto.NicknameRes;
 import com.aidiary.domain.user.domain.User;
 import com.aidiary.domain.user.domain.repository.UserRepository;
 import com.aidiary.global.config.security.token.UserPrincipal;
+import com.aidiary.global.payload.Message;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.persistence.EntityNotFoundException;
@@ -71,5 +72,15 @@ public class AuthService {
         User user = userRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
         user.updateFcmToken(fcmToken);
+    }
+
+    @Transactional
+    public Message unlinkAccount(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(EntityNotFoundException::new);
+        userRepository.delete(user);
+        return Message.builder()
+                .message("회원 탈퇴에 성공 했습니다.")
+                .build();
     }
 }
