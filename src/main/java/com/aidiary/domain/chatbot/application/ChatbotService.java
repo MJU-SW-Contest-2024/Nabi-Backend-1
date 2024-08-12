@@ -127,12 +127,4 @@ public class ChatbotService {
 
         return queryReq;
     }
-
-    public String greeting(UserPrincipal userPrincipal) {
-        User user = userRepository.findById(userPrincipal.getId())
-                .orElseThrow(EntityNotFoundException::new);
-        Greeting greeting = greetingRepository.findById(1L)
-                .orElseThrow(EntityNotFoundException::new);
-        return user.getNickname() + "! " + greeting.getInitialGreeting();
-    }
 }
