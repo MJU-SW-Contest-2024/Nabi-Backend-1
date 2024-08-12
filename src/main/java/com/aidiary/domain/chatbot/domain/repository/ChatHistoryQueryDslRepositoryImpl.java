@@ -29,7 +29,7 @@ public class ChatHistoryQueryDslRepositoryImpl implements ChatHistoryQueryDslRep
                 .from(chatHistory)
                 .where(chatHistory.user.id.eq(id))
                 .orderBy(chatHistory.createdAt.desc())
-                .limit(20)
+                .limit(60)
                 .fetch();
     }
 

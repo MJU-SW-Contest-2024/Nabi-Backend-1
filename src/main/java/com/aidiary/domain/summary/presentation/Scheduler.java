@@ -4,6 +4,7 @@ import com.aidiary.domain.summary.application.SummaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Component
 @RequiredArgsConstructor
