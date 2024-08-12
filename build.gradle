@@ -68,6 +68,9 @@ dependencies {
 
 
     implementation 'org.json:json:20210307'
+
+    // PDF
+    implementation 'org.apache.pdfbox:pdfbox:2.0.29'
 }
 
 tasks.named('test') {
