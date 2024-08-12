@@ -1,6 +1,11 @@
 package com.aidiary.domain.auth.application;
 
 import com.aidiary.domain.auth.dto.NicknameRes;
+import com.aidiary.domain.chatbot.domain.ChatHistory;
+import com.aidiary.domain.chatbot.domain.ChatRole;
+import com.aidiary.domain.chatbot.domain.Greeting;
+import com.aidiary.domain.chatbot.domain.repository.ChatHistoryRepository;
+import com.aidiary.domain.chatbot.domain.repository.GreetingRepository;
 import com.aidiary.domain.user.domain.User;
 import com.aidiary.domain.user.domain.repository.UserRepository;
 import com.aidiary.global.config.security.token.UserPrincipal;
@@ -20,6 +25,8 @@ import java.util.Optional;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final ChatHistoryRepository chatHistoryRepository;
+    private final GreetingRepository greetingRepository;
 
     @Transactional
     public User findOrCreateUser(String provider, String idToken) {
@@ -56,6 +63,18 @@ public class AuthService {
         user.updateNickname(nickname);
 
         user.updateIsRegistered();
+
+
+        Optional<Greeting> greeting = greetingRepository.findById(1L);
+
+        ChatHistory firstChatHistory = ChatHistory.builder()
+                .user(user)
+                .message(greeting.get().getInitialGreeting())
+                .chatRole(ChatRole.BOT)
+                .build();
+
+        chatHistoryRepository.save(firstChatHistory);
+
 
         NicknameRes nicknameRes = NicknameRes.builder()
                 .userid(user.getId())

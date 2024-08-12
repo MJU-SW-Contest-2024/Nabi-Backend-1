@@ -91,7 +91,7 @@ public class AuthController {
         System.out.println("idTokenReq = " + idTokenReq.idToken());
         System.out.println("idTokenReq = " + idTokenReq.provider());
 
-        String accessToken = jwtUtil.createJwt("access", "test_user", "ROLE_USER", 3600000L, "needfire3534@naver.com");
+        String accessToken = jwtUtil.createJwt("access", "", "ROLE_USER", 3600000L, "needfire3534@naver.com");
 
         AuthRes authRes = AuthRes.builder()
                 .accessToken(accessToken)
