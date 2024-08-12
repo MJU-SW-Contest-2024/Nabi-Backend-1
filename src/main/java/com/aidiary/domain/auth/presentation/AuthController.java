@@ -12,6 +12,7 @@ import com.aidiary.global.config.security.oidc.Provider;
 import com.aidiary.global.config.security.token.CurrentUser;
 import com.aidiary.global.config.security.token.UserPrincipal;
 import com.aidiary.global.payload.ErrorResponse;
+import com.aidiary.global.payload.Message;
 import com.aidiary.global.payload.ResponseCustom;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -97,5 +98,18 @@ public class AuthController {
                 .build();
 
         return ResponseCustom.OK(authRes);
+    }
+
+
+    @Operation(summary = "회원 탈퇴", description = "해당 유저의 가입을 탈퇴합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Message.class)))}),
+            @ApiResponse(responseCode = "400", description = "회원 탈퇴 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @DeleteMapping()
+    public ResponseCustom<Message> unlinkSocialAccount(
+            @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal
+    ) {
+        return ResponseCustom.OK(authService.unlinkAccount(userPrincipal.getId()));
     }
 }
