@@ -2,10 +2,7 @@ package com.aidiary.domain.emotion.presentation;
 
 import com.aidiary.domain.diary.domain.repository.DiaryRepository;
 import com.aidiary.domain.emotion.application.EmotionService;
-import com.aidiary.domain.emotion.dto.ChatGPTReq;
-import com.aidiary.domain.emotion.dto.ChatGPTRes;
-import com.aidiary.domain.emotion.dto.DiarysByEmotionRes;
-import com.aidiary.domain.emotion.dto.EmotionStatRes;
+import com.aidiary.domain.emotion.dto.*;
 import com.aidiary.global.config.security.token.CurrentUser;
 import com.aidiary.global.config.security.token.UserPrincipal;
 import com.aidiary.global.payload.ErrorResponse;
@@ -111,11 +108,11 @@ public class EmotionController {
 
     @Operation(summary = "일기에 저장된 감정 수정", description = "일기에 저장된 감정을 수정합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "감정 수정 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = DiarysByEmotionRes.class))}),
+            @ApiResponse(responseCode = "200", description = "감정 수정 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = DiaryEditEmotionRes.class))}),
             @ApiResponse(responseCode = "400", description = "감정 수정 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
     })
     @PatchMapping("{diaryId}/{emotion}")
-    public ResponseCustom<?> editDiaryEmotion(
+    public ResponseCustom<DiaryEditEmotionRes> editDiaryEmotion(
             @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
             @Parameter(description = "수정할 감정(행복, 우울, 화남, 불안, 지루함)을 입력해주세요.", required = true) @PathVariable String emotion,
             @Parameter(description = "감정을 수정할 일기의 id를 입력해주세요.", required = true) @PathVariable Long diaryId
