@@ -2,6 +2,7 @@ package com.aidiary.domain.emotion.application;
 
 import com.aidiary.domain.diary.domain.Diary;
 import com.aidiary.domain.diary.domain.repository.DiaryRepository;
+import com.aidiary.domain.emotion.dto.DiaryEditEmotionRes;
 import com.aidiary.domain.emotion.dto.DiarysByEmotionRes;
 import com.aidiary.domain.emotion.dto.EmotionStatRes;
 import com.aidiary.domain.user.domain.User;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -75,5 +75,29 @@ public class EmotionService {
     public Slice<DiarysByEmotionRes> findDiarys(UserPrincipal userPrincipal, String emotion, Pageable pageable) {
         Slice<DiarysByEmotionRes> allByEmotionAndUserId = diaryRepository.findAllByEmotionAndUserId(emotion, userPrincipal.getId(), pageable);
         return allByEmotionAndUserId;
+    }
+
+    @Transactional
+    public DiaryEditEmotionRes editEmotion(Long userId, String emotion, Long diaryId) {
+        Diary diary = diaryRepository.findById(diaryId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        if (!diary.getUser().getId().equals(userId)) {
+            return DiaryEditEmotionRes
+                    .builder()
+                    .diaryId(diaryId)
+                    .isEdited(false)
+                    .emotion(diary.getEmotion())
+                    .build();
+        }
+
+        diary.updateEmotion(emotion);
+
+        return DiaryEditEmotionRes
+                .builder()
+                .diaryId(diaryId)
+                .isEdited(true)
+                .emotion(emotion)
+                .build();
     }
 }

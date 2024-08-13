@@ -108,4 +108,18 @@ public class EmotionController {
     ) {
         return ResponseCustom.OK(emotionService.findDiarys(userPrincipal, emotion, pageable));
     }
+
+    @Operation(summary = "일기에 저장된 감정 수정", description = "일기에 저장된 감정을 수정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "감정 수정 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = DiarysByEmotionRes.class))}),
+            @ApiResponse(responseCode = "400", description = "감정 수정 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @PatchMapping("{diaryId}/{emotion}")
+    public ResponseCustom<?> editDiaryEmotion(
+            @Parameter(description = "Accesstoken을 입력해주세요.", required = true) @CurrentUser UserPrincipal userPrincipal,
+            @Parameter(description = "수정할 감정(행복, 우울, 화남, 불안, 지루함)을 입력해주세요.", required = true) @PathVariable String emotion,
+            @Parameter(description = "감정을 수정할 일기의 id를 입력해주세요.", required = true) @PathVariable Long diaryId
+    ) {
+        return ResponseCustom.OK(emotionService.editEmotion(userPrincipal.getId(), emotion, diaryId));
+    }
 }
