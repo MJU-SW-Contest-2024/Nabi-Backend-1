@@ -13,4 +13,6 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long>, Bookm
     Optional<Bookmark> findByUserAndDiary(User user, Diary diary);
 
     Optional<Bookmark> findByUserIdAndDiaryId(Long id, Long diaryId);
+
+    void deleteAllByDiary(Diary diary);
 }

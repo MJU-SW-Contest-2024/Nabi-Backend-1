@@ -1,5 +1,6 @@
 package com.aidiary.domain.diary.domain;
 
+import com.aidiary.domain.bookmark.domain.Bookmark;
 import com.aidiary.domain.common.BaseEntity;
 import com.aidiary.domain.user.domain.User;
 import jakarta.persistence.*;
@@ -9,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -32,6 +35,9 @@ public class Diary extends BaseEntity {
 
     @Column(name = "emotion")
     private String emotion;
+
+    @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Bookmark> bookmark = new ArrayList<>();
 
 
     @Builder

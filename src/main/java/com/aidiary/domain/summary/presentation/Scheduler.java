@@ -12,7 +12,7 @@ public class Scheduler {
 
     private final SummaryService summaryService;
 
-    @Scheduled(cron = "0 0 3 ? * MON")
+    @Scheduled(cron = "0 0 1 * * ?")
     public void run() {
         summaryService.summarize();
     }
