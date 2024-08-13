@@ -1,5 +1,6 @@
 package com.aidiary.domain.diary.application;
 
+import com.aidiary.domain.bookmark.domain.repository.BookmarkRepository;
 import com.aidiary.domain.diary.domain.Diary;
 import com.aidiary.domain.diary.domain.repository.DiaryRepository;
 import com.aidiary.domain.diary.dto.*;
@@ -25,6 +26,7 @@ public class DiaryService {
 
     private final UserRepository userRepository;
     private final DiaryRepository diaryRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     @Transactional
     public CreateDiaryRes writeDiary(UserPrincipal userPrincipal, CreateDiaryReq createDiaryReq) {
@@ -80,17 +82,20 @@ public class DiaryService {
         User user = userRepository.findById(userPrincipal.getId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        if (diary.getUser().equals(user)) {
+        if (!user.equals(diary.getUser())) {
+
+            return Message.builder()
+                    .message("일기 삭제에 실패했습니다.")
+                    .build();
+
+        }
+
+            bookmarkRepository.deleteAllByDiary(diary);
             diaryRepository.delete(diary);
 
             return Message.builder()
                     .message("일기를 삭제하였습니다.")
                     .build();
-        }
-
-        return Message.builder()
-                .message("일기 삭제에 실패했습니다.")
-                .build();
     }
 
     @Transactional
