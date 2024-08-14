@@ -1,7 +1,10 @@
 package com.aidiary.domain.notification.application;
 
+import com.aidiary.domain.notification.domain.Notification;
+import com.aidiary.domain.notification.domain.repository.NotificationRepository;
 import com.aidiary.domain.notification.dto.FcmMessage;
 import com.aidiary.domain.notification.dto.FcmTokenReq;
+import com.aidiary.domain.notification.dto.NotificationRes;
 import com.aidiary.domain.user.domain.User;
 import com.aidiary.domain.user.domain.repository.UserRepository;
 import com.aidiary.global.config.security.token.UserPrincipal;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +36,7 @@ public class FcmService {
     private final ObjectMapper objectMapper;
 
     private final UserRepository userRepository;
+    private final NotificationRepository notificationRepository;
 
     @Transactional
     public void sendMessageTo(String targetToken, String title, String body) throws IOException {
@@ -97,13 +102,41 @@ public class FcmService {
                 .build();
     }
 
+    @Transactional
     public void broadcastMessage(String title, String body) throws IOException {
         List<String> tokens = userRepository.findAll().stream()
                 .map(User::getFcmToken)
                 .collect(Collectors.toList());
 
+        Notification notification = Notification.builder()
+                .title(title)
+                .body(body)
+                .build();
+
+        notificationRepository.save(notification);
+
         for (String token : tokens) {
             sendMessageTo(token, title, body);
         }
+    }
+
+    public List<NotificationRes> getNoti() {
+        List<Notification> allOrderByCreatedAtDesc = notificationRepository.findAllOrderByCreatedAtDesc();
+        List<NotificationRes> notificationResList = new ArrayList<>();
+        allOrderByCreatedAtDesc.stream()
+                .map(notification -> {
+                    NotificationRes notificationRes = NotificationRes.builder()
+                            .createdAt(notification.getCreatedAt())
+                            .title(notification.getTitle())
+                            .body(notification.getBody())
+                            .build();
+
+                    notificationResList.add(notificationRes);
+
+                    return notification;
+                } )
+                .collect(Collectors.toList());
+
+        return notificationResList;
     }
 }
