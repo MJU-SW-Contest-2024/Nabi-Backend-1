@@ -4,6 +4,7 @@ import com.aidiary.domain.auth.dto.AuthRes;
 import com.aidiary.domain.notification.application.FcmService;
 import com.aidiary.domain.notification.dto.FcmReq;
 import com.aidiary.domain.notification.dto.FcmTokenReq;
+import com.aidiary.domain.notification.dto.NotificationRes;
 import com.aidiary.global.config.security.token.CurrentUser;
 import com.aidiary.global.config.security.token.UserPrincipal;
 import com.aidiary.global.payload.ErrorResponse;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @Tag(name = "Notification",description = "Notification API")
 @RestController
@@ -54,6 +56,16 @@ public class NotificationController {
         fcmService.broadcastMessage(fcmReq.title(), fcmReq.body());
 
         return ResponseCustom.OK("Message is pushed");
+    }
+
+    @Operation(summary = "알림 내역 조회하기", description = "유저가 받은 모든 알림을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "알림 조회 성공", content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = NotificationRes.class)))}),
+            @ApiResponse(responseCode = "400", description = "알림 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    @GetMapping("/notification")
+    public ResponseCustom<List<NotificationRes>> getNotifications() {
+        return ResponseCustom.OK(fcmService.getNoti());
     }
 
 }
