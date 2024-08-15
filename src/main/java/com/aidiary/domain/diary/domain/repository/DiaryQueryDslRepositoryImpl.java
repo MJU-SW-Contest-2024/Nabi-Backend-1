@@ -225,6 +225,24 @@ public class DiaryQueryDslRepositoryImpl implements DiaryQueryDslRepository {
         return diaryDetailsRes;
     }
 
+    @Override
+    public List<HomeViewRes> findBookmarkedDiary(Long userId) {
+        return queryFactory
+                .select(new QHomeViewRes(
+                        diary.id,
+                        diary.content,
+                        diary.diaryEntryDate,
+                        diary.emotion,
+                        bookmark.id.isNotNull()
+                ))
+                .from(bookmark)
+                .leftJoin(diary)
+                .on(bookmark.diary.id.eq(diary.id))
+                .orderBy(diary.createdAt.desc())
+                .where(diary.user.id.eq(userId))
+                .fetch();
+    }
+
     private Slice<DiarysByEmotionRes> toSlice(List<DiarysByEmotionRes> results, Pageable pageable) {
         int pageSize = pageable.getPageSize();
         boolean hasNext = false;

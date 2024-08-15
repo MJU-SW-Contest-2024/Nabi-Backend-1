@@ -31,4 +31,6 @@ public interface DiaryQueryDslRepository {
     List<DiaryDetailsRes> findByUserIdWithYearAndMonth(Long id, int year, int month);
 
     DiaryDetailsRes findOneByUserIdAndDiaryId(Long id, Long diaryId);
+
+    List<HomeViewRes> findBookmarkedDiary(Long userId);
 }

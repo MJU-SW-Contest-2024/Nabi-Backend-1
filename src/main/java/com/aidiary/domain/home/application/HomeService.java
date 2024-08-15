@@ -28,7 +28,7 @@ public class HomeService {
         User user = userRepository.findById(userPrincipal.getId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        List<HomeViewRes> recentFiveDiaryWithAuthorization = diaryRepository.findRecentFiveDiaryWithAuthorization(userPrincipal.getId());
+        List<HomeViewRes> bookmarkedDiary = diaryRepository.findBookmarkedDiary(userPrincipal.getId());
 
         String nickname = user.getNickname();
 
@@ -37,7 +37,7 @@ public class HomeService {
         HomePageWrapperRes homePageWrapperRes = HomePageWrapperRes.builder()
                 .nickname(nickname)
                 .consecutiveWritingDays(consecutiveWritingDays)
-                .recentFiveDiaries(recentFiveDiaryWithAuthorization)
+                .recentFiveDiaries(bookmarkedDiary)
                 .build();
 
         return homePageWrapperRes;
