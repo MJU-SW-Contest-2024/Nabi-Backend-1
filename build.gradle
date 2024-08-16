@@ -71,6 +71,9 @@ dependencies {
 
     // PDF
     implementation 'org.apache.pdfbox:pdfbox:2.0.29'
+
+    // actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 }
 
 tasks.named('test') {
