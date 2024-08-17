@@ -32,7 +32,6 @@ public class ChatbotService {
     private final ChatHistoryRepository chatHistoryRepository;
     private final DiarySummaryRepository diarySummaryRepository;
     private final UserRepository userRepository;
-    private final GreetingRepository greetingRepository;
 
 
     @Transactional
