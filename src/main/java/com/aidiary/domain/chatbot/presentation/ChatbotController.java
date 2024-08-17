@@ -64,6 +64,7 @@ public class ChatbotController {
 
         DiaryEmbeddingReq madeRequest = chatbotService.makeRequest(userPrincipal.getId());
 
+
         HttpEntity<DiaryEmbeddingReq> requestEntity = new HttpEntity<>(madeRequest, headers);
         ResponseEntity<String> response = restTemplate.postForEntity(fastApiUrl, requestEntity, String.class);
 
@@ -98,7 +99,9 @@ public class ChatbotController {
 
         // JSON 응답에서 message 필드만 추출
         JSONObject responseBody = new JSONObject(response.getBody());
+        System.out.println("responseBody = " + responseBody);
         String message = responseBody.getString("message");
+        System.out.println("message = " + message);
 
         // Bot 응답 저장
         chatbotService.registerBotChat(userPrincipal, message);
