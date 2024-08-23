@@ -2,6 +2,8 @@ package com.aidiary.domain.emotion.application;
 
 import com.aidiary.domain.diary.domain.Diary;
 import com.aidiary.domain.diary.domain.repository.DiaryRepository;
+import com.aidiary.domain.emotion.domain.EmotionStatistics;
+import com.aidiary.domain.emotion.domain.repository.EmotionStatisticsRepository;
 import com.aidiary.domain.emotion.dto.DiaryEditEmotionRes;
 import com.aidiary.domain.emotion.dto.DiarysByEmotionRes;
 import com.aidiary.domain.emotion.dto.EmotionStatRes;
@@ -25,6 +27,7 @@ public class EmotionService {
 
     private final DiaryRepository diaryRepository;
     private final UserRepository userRepository;
+    private final EmotionStatisticsRepository emotionStatisticsRepository;
 
     @Transactional
     public String loadDiaryContent(UserPrincipal userPrincipal, Long diaryId) {
@@ -53,6 +56,11 @@ public class EmotionService {
         if (diary.getUser().equals(user)) {
             diary.updateEmotion(emotionState);
 
+
+            EmotionStatistics emotionStatistics = emotionStatisticsRepository.findByUserId(userPrincipal.getId())
+                    .orElseThrow(RuntimeException::new);
+            emotionStatistics.updateEmotionStats(emotionState);
+
             return Message.builder()
                     .message("감정 저장에 성공했습니다.")
                     .build();
@@ -65,6 +73,23 @@ public class EmotionService {
     }
 
     public EmotionStatRes loadEmotionStat(UserPrincipal userPrincipal, LocalDate startDate, LocalDate endDate) {
+
+        LocalDate today = LocalDate.now();
+        // 오늘 날짜에서 31일을 뺀 날짜를 구합니다.
+        LocalDate thirtyOneDaysAgo = today.minusDays(31);
+
+        if (startDate.equals(today) && endDate.equals(thirtyOneDaysAgo)) {
+            EmotionStatistics emotionStatistics = emotionStatisticsRepository.findByUserId(userPrincipal.getId())
+                    .orElseThrow(RuntimeException::new);
+
+            return EmotionStatRes.builder()
+                    .angerCount(emotionStatistics.getAngerCount())
+                    .boringCount(emotionStatistics.getBoringCount())
+                    .anxietyCount(emotionStatistics.getAnxietyCount())
+                    .happinessCount(emotionStatistics.getHappinessCount())
+                    .depressionCount(emotionStatistics.getDepressionCount())
+                    .build();
+        }
 
         EmotionStatRes emotionsCountBetweenStartDateAndEndDate = diaryRepository.findEmotionsCountBetweenStartDateAndEndDate(userPrincipal.getId(), startDate, endDate);
 

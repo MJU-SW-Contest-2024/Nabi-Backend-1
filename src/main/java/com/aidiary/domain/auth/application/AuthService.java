@@ -6,6 +6,8 @@ import com.aidiary.domain.chatbot.domain.ChatRole;
 import com.aidiary.domain.chatbot.domain.Greeting;
 import com.aidiary.domain.chatbot.domain.repository.ChatHistoryRepository;
 import com.aidiary.domain.chatbot.domain.repository.GreetingRepository;
+import com.aidiary.domain.emotion.domain.EmotionStatistics;
+import com.aidiary.domain.emotion.domain.repository.EmotionStatisticsRepository;
 import com.aidiary.domain.user.domain.User;
 import com.aidiary.domain.user.domain.repository.UserRepository;
 import com.aidiary.global.config.security.token.UserPrincipal;
@@ -27,6 +29,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final ChatHistoryRepository chatHistoryRepository;
     private final GreetingRepository greetingRepository;
+    private final EmotionStatisticsRepository emotionStatisticsRepository;
 
     @Transactional
     public User findOrCreateUser(String provider, String idToken) {
@@ -63,6 +66,19 @@ public class AuthService {
         user.updateNickname(nickname);
 
         user.updateIsRegistered();
+
+        // 통계 엔터티 생성
+        EmotionStatistics emotionStatistics = EmotionStatistics.builder()
+                .depressionCount(0)
+                .happinessCount(0)
+                .angerCount(0)
+                .anxietyCount(0)
+                .boringCount(0)
+                .userId(userPrincipal.getId())
+                .build();
+
+        emotionStatisticsRepository.save(emotionStatistics);
+
 
 
         Optional<Greeting> greeting = greetingRepository.findById(1L);
